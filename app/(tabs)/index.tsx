@@ -14,6 +14,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { BASE_DB_URL, pb } from "@/db/pb";
 import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
+import { Link } from "expo-router";
 
 const { width } = Dimensions.get("window");
 const itemWidth = width / 2 - 15; // Subtracting for margins
@@ -36,7 +37,7 @@ export default function HomeScreen() {
   }, [lol]);
 
   const renderItem = ({ item }) => (
-    <TouchableOpacity>
+    <Link href={`/bookSelection/${item.type}/${item.title}`} className="m-2">
       <ThemedView style={styles.itemContainer}>
         <Image
           source={{
@@ -46,7 +47,7 @@ export default function HomeScreen() {
         />
         <ThemedText style={styles.title}>{item.title}</ThemedText>
       </ThemedView>
-    </TouchableOpacity>
+    </Link>
   );
 
   return (
