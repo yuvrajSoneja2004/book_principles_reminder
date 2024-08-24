@@ -10,6 +10,7 @@ import { ThemedText } from "./ThemedText";
 
 interface LabeledInputProps extends TextInputProps {
   label: string;
+  isTextArea?: boolean;
 }
 
 const LabeledInput: React.FC<LabeledInputProps> = ({
@@ -19,6 +20,7 @@ const LabeledInput: React.FC<LabeledInputProps> = ({
   placeholder,
   secureTextEntry,
   keyboardType,
+  isTextArea,
   ...rest
 }) => {
   return (
@@ -31,7 +33,11 @@ const LabeledInput: React.FC<LabeledInputProps> = ({
         placeholder={placeholder}
         secureTextEntry={secureTextEntry}
         keyboardType={keyboardType}
+        multiline={isTextArea}
         {...rest}
+        className={`${
+          isTextArea && "h-32 justify-start items-start flex align-top"
+        }`}
       />
     </View>
   );
@@ -44,6 +50,8 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     marginBottom: 4,
+    fontFamily: "PrimaryFont",
+    letterSpacing: 1,
   },
   input: {
     borderWidth: 1,
@@ -52,6 +60,8 @@ const styles = StyleSheet.create({
     padding: 8,
     fontSize: 16,
     backgroundColor: "#fff",
+    fontFamily: "SecondaryFont",
+    letterSpacing: 0.2,
   },
 });
 

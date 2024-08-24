@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -6,24 +6,56 @@ import {
   StyleSheet,
   ScrollView,
   Dimensions,
+  ActivityIndicator,
 } from "react-native";
 import { Link, useLocalSearchParams } from "expo-router";
 import SafeAreaScreen from "@/utils/SafeAreaScreen";
 import BookCard from "@/components/BookCard";
-
-const { width, height } = Dimensions.get("window");
+import { pb } from "@/db/pb";
+import { RecordModel } from "pocketbase";
 
 export default function BookSelection() {
   const { slug } = useLocalSearchParams();
+  const [books, setBooks] = useState<RecordModel[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const { height } = Dimensions.get("window");
 
+  useEffect(() => {
+    // Fetch Books data from the db.
+    pb.collection("Books")
+      .getList(1, 50, {
+        filter: `type = '${slug[0]}'`,
+      })
+      .then((res) => {
+        console.log(res.items);
+
+        setBooks(res.items);
+      })
+      .catch((er) => {
+        console.error(er.data);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, []);
   return (
     <SafeAreaScreen>
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
         <Text className="text-white" style={styles.headerText}>
           Books containing {slug[1]} principles.
         </Text>
-        <BookCard />
-        {/* Add more content here as needed */}
+
+        {books.length === 0 && !isLoading ? (
+          <Text className="text-white">Jagan :C</Text>
+        ) : isLoading ? (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator color={"#fff"} size={50} />
+          </View>
+        ) : (
+          books?.map((book, i) => {
+            return <BookCard key={i} book={book} />;
+          })
+        )}
       </ScrollView>
       <TouchableOpacity
         style={styles.fixedButton}
@@ -46,10 +78,12 @@ export default function BookSelection() {
 const styles = StyleSheet.create({
   scrollViewContent: {
     paddingBottom: 100, // Add padding to avoid content being hidden behind the button
+    paddingHorizontal: 7,
   },
   headerText: {
     fontSize: 30,
     marginBottom: 20,
+    fontFamily: "PrimaryFont",
   },
   fixedButton: {
     position: "absolute",
@@ -74,5 +108,15 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 32,
     fontWeight: "bold",
+  },
+  loadingContainer: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "rgba(0,0,0,0.5)", // semi-transparent background
   },
 });

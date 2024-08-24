@@ -9,7 +9,13 @@ module.exports = {
     "./app/**/*.{js,jsx,ts,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        "primary-regular": ["PrimaryFont", "sans-shreif"],
+        "secondary-regular": ["SecondaryFont", "sans-shreif"],
+        "secondary-bold": ["SecondaryFontBold", "sans-shreif"],
+      },
+    },
   },
   plugins: [],
-}
+};

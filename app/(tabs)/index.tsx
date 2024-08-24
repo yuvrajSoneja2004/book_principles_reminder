@@ -9,6 +9,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  RefreshControl,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { BASE_DB_URL, pb } from "@/db/pb";
@@ -22,9 +23,10 @@ const itemWidth = width / 2 - 15; // Subtracting for margins
 export default function HomeScreen() {
   const [categories, setCategories] = useState([]);
   const [lol, setLol] = useState(0);
+  const [refreshing, setRefreshing] = React.useState(false);
 
-  useEffect(() => {
-    // Fetch Categories data from the db.
+  // TODO: Turn the below code to recusable 'useFetch' custom hook.
+  const fetchInfo = () => {
     pb.collection("Categories")
       .getList()
       .then((res) => {
@@ -33,7 +35,18 @@ export default function HomeScreen() {
       })
       .catch((er) => {
         console.error("Error fetching categories:", er);
-      });
+      })
+      .finally(() => setRefreshing(false));
+  };
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    fetchInfo();
+  }, []);
+
+  useEffect(() => {
+    // Fetch Categories data from the db.
+    fetchInfo();
   }, [lol]);
 
   const renderItem = ({ item }) => (
@@ -52,7 +65,12 @@ export default function HomeScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollViewContent}>
+      <ScrollView
+        contentContainerStyle={styles.scrollViewContent}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
         <FlatList
           data={categories}
           renderItem={renderItem}

@@ -30,6 +30,8 @@ export default function AddBook() {
   const [allowPrinciplesEditing, setAllowPrinciplesEditing] =
     useState<boolean>(false);
 
+  const [documentId, setDocumentId] = useState("");
+
   const handleInputChange = (name: string, value: string) => {
     setBookDetails((prevState) => ({
       ...prevState,
@@ -76,6 +78,7 @@ export default function AddBook() {
 
       const createdBook = await pb.collection("Books").create(formData);
       console.log("Book added:", createdBook);
+      setDocumentId(createdBook.id);
       Alert.alert("Success", "Book added successfully!");
       setAllowPrinciplesEditing(true);
     } catch (error) {
@@ -84,7 +87,7 @@ export default function AddBook() {
     }
   };
 
-  if (allowPrinciplesEditing) return <AddPrinciples />;
+  if (allowPrinciplesEditing) return <AddPrinciples documentId={documentId} />;
 
   return (
     <SafeAreaScreen>
