@@ -18,7 +18,6 @@ export default function BookSelection() {
   const { slug } = useLocalSearchParams();
   const [books, setBooks] = useState<RecordModel[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const { height } = Dimensions.get("window");
 
   useEffect(() => {
     // Fetch Books data from the db.
@@ -53,7 +52,20 @@ export default function BookSelection() {
           </View>
         ) : (
           books?.map((book, i) => {
-            return <BookCard key={i} book={book} />;
+            return (
+              <Link
+                href={{
+                  pathname: `/singleBookScreen/singleBookScreen`,
+                  params: {
+                    bookId: book.id,
+                  },
+                }}
+                key={i}
+                style={styles.link}
+              >
+                <BookCard book={book} />
+              </Link>
+            );
           })
         )}
       </ScrollView>
@@ -118,5 +130,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "rgba(0,0,0,0.5)", // semi-transparent background
+  },
+  link: {
+    width: "100%", // Ensure the link takes full width of its container
+    marginBottom: 10, // Space between book cards
   },
 });

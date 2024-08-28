@@ -5,8 +5,8 @@ import { ThemedText } from "./ThemedText";
 interface Props {
   title: string;
   onPress: () => void;
-  icon: React.ReactNode;
-  onLongPress: () => void;
+  icon?: React.ReactNode;
+  onLongPress?: () => void;
   styles: string;
 }
 export default function GlobalButton({

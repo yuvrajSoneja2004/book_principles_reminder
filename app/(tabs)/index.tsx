@@ -16,6 +16,7 @@ import { BASE_DB_URL, pb } from "@/db/pb";
 import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
 import { Link } from "expo-router";
+import Register from "../(auth)/register";
 
 const { width } = Dimensions.get("window");
 const itemWidth = width / 2 - 15; // Subtracting for margins
@@ -65,6 +66,9 @@ export default function HomeScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <Text className="text-white font-primary-regular text-4xl px-4 py-4">
+        Hi {pb.authStore?.baseModel?.username || "User"}.
+      </Text>
       <ScrollView
         contentContainerStyle={styles.scrollViewContent}
         refreshControl={
@@ -79,11 +83,6 @@ export default function HomeScreen() {
           columnWrapperStyle={styles.row}
           scrollEnabled={false}
         />
-        <TouchableOpacity>
-          <Text className="text-white" onPress={() => setLol(lol + 1)}>
-            Reload
-          </Text>
-        </TouchableOpacity>
       </ScrollView>
       <TouchableOpacity
         style={styles.addButton}

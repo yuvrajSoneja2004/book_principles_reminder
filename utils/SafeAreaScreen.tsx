@@ -9,7 +9,7 @@ export default function SafeAreaScreen({
 }) {
   return (
     <SafeAreaView style={{ width: "100%" }}>
-      <View style={{ padding: 10, width: "100%" }}>{children}</View>
+      <View style={{ padding: 20, width: "100%" }}>{children}</View>
     </SafeAreaView>
   );
 }

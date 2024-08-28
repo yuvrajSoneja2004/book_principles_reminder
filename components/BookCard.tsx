@@ -26,7 +26,7 @@ export default function BookCard({ book }: Props) {
   const { coverImg, created, title, author, collectionName, id } = book;
 
   return (
-    <ThemedView className="flex flex-row h-40 rounded-lg w-full p-3">
+    <ThemedView className="flex flex-row h-40 rounded-lg  p-3">
       <TouchableOpacity style={styles.imagePicker}>
         <View style={styles.placeholderContainer}>
           <Image
