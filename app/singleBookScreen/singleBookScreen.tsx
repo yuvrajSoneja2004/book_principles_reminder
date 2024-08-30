@@ -47,7 +47,7 @@ export default function SingleBookScreen() {
   };
 
   return (
-    <SafeAreaScreen>
+    <SafeAreaScreen givePadding={false}>
       <View style={styles.container}>
         <GlobalButton
           title=""
@@ -91,8 +91,8 @@ const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "center", // Center content vertically
-    paddingHorizontal: 20, // Add horizontal padding for spacing
+    justifyContent: "flex-start", // Center content vertically
+    paddingHorizontal: 5, // Add horizontal padding for spacing
   },
   title: {
     fontSize: 32, // Adjusted size

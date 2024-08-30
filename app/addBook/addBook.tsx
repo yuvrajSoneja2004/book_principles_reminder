@@ -16,6 +16,7 @@ import Entypo from "@expo/vector-icons/Entypo";
 import AddPrinciples from "@/components/AddPrinciples";
 import { pb } from "@/db/pb";
 import { useLocalSearchParams } from "expo-router";
+import BrowseImage from "@/components/BrowseImage";
 
 export default function AddBook() {
   const { booksType } = useLocalSearchParams();
@@ -29,6 +30,7 @@ export default function AddBook() {
   });
   const [allowPrinciplesEditing, setAllowPrinciplesEditing] =
     useState<boolean>(false);
+  const [browseImage, setBrowseImage] = useState<boolean>(false);
 
   const [documentId, setDocumentId] = useState("");
 
@@ -88,12 +90,17 @@ export default function AddBook() {
   };
 
   if (allowPrinciplesEditing) return <AddPrinciples documentId={documentId} />;
+  if (browseImage) return <BrowseImage />;
 
   return (
     <SafeAreaScreen>
       <ThemedText className="text-3xl">Preview</ThemedText>
       <ThemedView className="flex flex-row h-40 rounded-lg">
-        <TouchableOpacity onPress={handleImagePick} style={styles.imagePicker}>
+        <TouchableOpacity
+          onPress={handleImagePick}
+          style={styles.imagePicker}
+          onLongPress={() => setBrowseImage(true)}
+        >
           {bookDetails.coverImage ? (
             <Image
               source={{ uri: bookDetails.coverImage }}

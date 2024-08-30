@@ -7,7 +7,7 @@ interface Props {
   onPress: () => void;
   icon?: React.ReactNode;
   onLongPress?: () => void;
-  styles: string;
+  styles?: string;
 }
 export default function GlobalButton({
   title = "Insert Title",

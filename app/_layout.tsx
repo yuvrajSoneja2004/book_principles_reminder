@@ -1,11 +1,12 @@
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
+import { router, Stack } from "expo-router";
+import * as SplashScreen from "expo-splash-screen";
+import { useEffect } from "react";
+import "react-native-reanimated";
 
-import { useColorScheme } from '@/hooks/useColorScheme';
+import { useColorScheme } from "@/hooks/useColorScheme";
+import { pb } from "@/db/pb";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -25,10 +26,23 @@ export default function RootLayout() {
     }
   }, [loaded]);
 
+  // useEffect(() => {
+  //   // Check if the user is already authenticated
+  //   const checkAuth = async () => {
+  //     if (pb.authStore.isValid) {
+  //       console.log("User is already authenticated:", pb.authStore.model);
+  //       router.replace("/(app)/home"); // Navigate to home screen
+  //     } else {
+  //       router.replace("/(auth)/login");
+  //     }
+  //   };
+
+  //   checkAuth();
+  // }, []);
+
   if (!loaded) {
     return null;
   }
-
 
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>

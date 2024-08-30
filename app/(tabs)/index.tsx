@@ -17,13 +17,14 @@ import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
 import { Link } from "expo-router";
 import Register from "../(auth)/register";
+import Challanges from "./challanges";
 
 const { width } = Dimensions.get("window");
 const itemWidth = width / 2 - 15; // Subtracting for margins
 
 export default function HomeScreen() {
   const [categories, setCategories] = useState([]);
-  const [lol, setLol] = useState(0);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [refreshing, setRefreshing] = React.useState(false);
 
   // TODO: Turn the below code to recusable 'useFetch' custom hook.
@@ -48,7 +49,7 @@ export default function HomeScreen() {
   useEffect(() => {
     // Fetch Categories data from the db.
     fetchInfo();
-  }, [lol]);
+  }, []);
 
   const renderItem = ({ item }) => (
     <Link href={`/bookSelection/${item.type}/${item.title}`} className="m-2">
@@ -65,32 +66,33 @@ export default function HomeScreen() {
   );
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Text className="text-white font-primary-regular text-4xl px-4 py-4">
-        Hi {pb.authStore?.baseModel?.username || "User"}.
-      </Text>
-      <ScrollView
-        contentContainerStyle={styles.scrollViewContent}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-      >
-        <FlatList
-          data={categories}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.id}
-          numColumns={2}
-          columnWrapperStyle={styles.row}
-          scrollEnabled={false}
-        />
-      </ScrollView>
-      <TouchableOpacity
-        style={styles.addButton}
-        onPress={() => console.log("Add pressed")}
-      >
-        <Text style={styles.addButtonText}>Add</Text>
-      </TouchableOpacity>
-    </SafeAreaView>
+    // <SafeAreaView style={styles.container}>
+    //   <Text className="text-white font-primary-regular text-4xl px-4 py-4">
+    //     Hi {pb.authStore?.baseModel?.username || "User"}.
+    //   </Text>
+    //   <ScrollView
+    //     contentContainerStyle={styles.scrollViewContent}
+    //     refreshControl={
+    //       <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+    //     }
+    //   >
+    //     <FlatList
+    //       data={categories}
+    //       renderItem={renderItem}
+    //       keyExtractor={(item) => item.id}
+    //       numColumns={2}
+    //       columnWrapperStyle={styles.row}
+    //       scrollEnabled={false}
+    //     />
+    //   </ScrollView>
+    //   <TouchableOpacity
+    //     style={styles.addButton}
+    //     onPress={() => console.log("Add pressed")}
+    //   >
+    //     <Text style={styles.addButtonText}>Add</Text>
+    //   </TouchableOpacity>
+    // </SafeAreaView>
+    <Challanges />
   );
 }
 
