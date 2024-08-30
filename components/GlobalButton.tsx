@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, ActivityIndicator } from "react-native";
 import React from "react";
 import { ThemedText } from "./ThemedText";
 
@@ -7,6 +7,7 @@ interface Props {
   onPress: () => void;
   icon?: React.ReactNode;
   onLongPress?: () => void;
+  isLoading?: boolean;
   styles?: string;
 }
 export default function GlobalButton({
@@ -14,6 +15,7 @@ export default function GlobalButton({
   onPress,
   icon,
   onLongPress,
+  isLoading,
   styles,
 }: Props) {
   return (
@@ -23,7 +25,11 @@ export default function GlobalButton({
       onLongPress={onLongPress}
     >
       {icon && icon}
-      <ThemedText className="font-primary-regular">{title}</ThemedText>
+      {isLoading ? (
+        <ActivityIndicator />
+      ) : (
+        <ThemedText className="font-primary-regular">{title}</ThemedText>
+      )}
     </TouchableOpacity>
   );
 }
