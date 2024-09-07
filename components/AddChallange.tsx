@@ -8,6 +8,7 @@ import { Image } from "expo-image";
 import Checkbox from "expo-checkbox";
 import GlobalButton from "./GlobalButton";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { router } from "expo-router";
 
 // Define types for the form inputs and category item
 type FormInputs = {
@@ -23,6 +24,7 @@ type CategoryItem = {
   collectionName: string;
   iconURI: string;
   title: string;
+  type: string;
 };
 
 export default function AddChallenge() {
@@ -53,7 +55,7 @@ export default function AddChallenge() {
         setCategories(res.items);
         const initialSelected: Record<string, boolean> = res.items.reduce(
           (acc, item) => {
-            acc[item.id] = false;
+            acc[item.type] = false;
             return acc;
           },
           {} as Record<string, boolean>
@@ -141,12 +143,11 @@ export default function AddChallenge() {
       formData.append("challangeReward", formInputs.challengeReward);
       formData.append("challangeDescription", formInputs.challengeDesc);
 
-      // Here you would typically send formData to your API
-      // For example: await pb.collection("Challenges").create(formData);
       await pb.collection("Challanges").create(formData);
 
       ToastAndroid.show("Challenge saved successfully", ToastAndroid.SHORT);
       // Optionally, reset form or navigate away
+      router.replace("/(tabs)/challanges");
     } catch (error) {
       console.log(error);
       if (error instanceof Error) {
@@ -160,7 +161,7 @@ export default function AddChallenge() {
   const renderCategory = (item: CategoryItem) => (
     <TouchableOpacity
       key={item.id}
-      onPress={() => handleCheckboxChange(item.id)}
+      onPress={() => handleCheckboxChange(item.type)}
       className="flex justify-start flex-row items-center my-2"
       style={{
         borderStyle: "solid",
@@ -177,8 +178,8 @@ export default function AddChallenge() {
       />
       <ThemedText style={{ flex: 1 }}>{item.title}</ThemedText>
       <Checkbox
-        value={selectedCategories[item.id]}
-        onValueChange={() => handleCheckboxChange(item.id)}
+        value={selectedCategories[item.type]}
+        onValueChange={() => handleCheckboxChange(item.type)}
         color="#bf9b30"
       />
     </TouchableOpacity>

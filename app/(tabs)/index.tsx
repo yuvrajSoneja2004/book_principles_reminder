@@ -66,33 +66,33 @@ export default function HomeScreen() {
   );
 
   return (
-    // <SafeAreaView style={styles.container}>
-    //   <Text className="text-white font-primary-regular text-4xl px-4 py-4">
-    //     Hi {pb.authStore?.baseModel?.username || "User"}.
-    //   </Text>
-    //   <ScrollView
-    //     contentContainerStyle={styles.scrollViewContent}
-    //     refreshControl={
-    //       <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-    //     }
-    //   >
-    //     <FlatList
-    //       data={categories}
-    //       renderItem={renderItem}
-    //       keyExtractor={(item) => item.id}
-    //       numColumns={2}
-    //       columnWrapperStyle={styles.row}
-    //       scrollEnabled={false}
-    //     />
-    //   </ScrollView>
-    //   <TouchableOpacity
-    //     style={styles.addButton}
-    //     onPress={() => console.log("Add pressed")}
-    //   >
-    //     <Text style={styles.addButtonText}>Add</Text>
-    //   </TouchableOpacity>
-    // </SafeAreaView>
-    <Challanges />
+    <SafeAreaView style={styles.container}>
+      <Text className="text-white font-primary-regular text-4xl px-4 py-4">
+        Hi {pb.authStore?.baseModel?.username || "User"}.
+      </Text>
+      <ScrollView
+        contentContainerStyle={styles.scrollViewContent}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
+        <FlatList
+          data={categories}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id}
+          numColumns={2}
+          columnWrapperStyle={styles.row}
+          scrollEnabled={false}
+        />
+      </ScrollView>
+      <TouchableOpacity
+        style={styles.addButton}
+        onPress={() => console.log("Add pressed")}
+      >
+        <Text style={styles.addButtonText}>Add</Text>
+      </TouchableOpacity>
+    </SafeAreaView>
+    // <Challanges />
   );
 }
 

@@ -59,6 +59,10 @@ export default function RootLayout() {
           name="singleBookScreen/singleBookScreen"
           options={{ headerShown: false }}
         />
+        <Stack.Screen
+          name="singleChallange/[challangeId]"
+          options={{ headerShown: true }}
+        />
         <Stack.Screen name="+not-found" />
       </Stack>
     </ThemeProvider>
