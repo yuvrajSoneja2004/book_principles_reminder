@@ -80,7 +80,6 @@ export default function Login() {
             secureTextEntry={true}
           />
           <GlobalButton title="Login" styles="mt-4" onPress={handleLogin} />
-          <GlobalButton title="Register" styles="mt-4" onPress={handleSignUp} />
           <Text className="font-primary-regular text-white mt-3 text-center">
             Don't have an account? <Link href="/register">Click here.</Link>
           </Text>

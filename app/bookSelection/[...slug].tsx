@@ -8,16 +8,18 @@ import {
   Dimensions,
   ActivityIndicator,
 } from "react-native";
-import { Link, useLocalSearchParams } from "expo-router";
+import { Link, useLocalSearchParams, useRouter } from "expo-router";
 import SafeAreaScreen from "@/utils/SafeAreaScreen";
 import BookCard from "@/components/BookCard";
 import { pb } from "@/db/pb";
 import { RecordModel } from "pocketbase";
+import { ThemedView } from "@/components/ThemedView";
 
 export default function BookSelection() {
   const { slug } = useLocalSearchParams();
   const [books, setBooks] = useState<RecordModel[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const router = useRouter();
 
   useEffect(() => {
     // Fetch Books data from the db.
@@ -53,18 +55,20 @@ export default function BookSelection() {
         ) : (
           books?.map((book, i) => {
             return (
-              <Link
-                href={{
-                  pathname: `/singleBookScreen/singleBookScreen`,
-                  params: {
-                    bookId: book.id,
-                  },
-                }}
+              <TouchableOpacity
+                onPress={() =>
+                  router.push({
+                    pathname: `/singleBookScreen/singleBookScreen`,
+                    params: {
+                      bookId: book.id,
+                    },
+                  })
+                }
                 key={i}
-                style={styles.link}
+                style={{ width: "100%" }}
               >
                 <BookCard book={book} />
-              </Link>
+              </TouchableOpacity>
             );
           })
         )}

@@ -11,6 +11,7 @@ import { ThemedView } from "./ThemedView";
 import { ThemedText } from "./ThemedText";
 import { BASE_DB_URL } from "@/db/pb";
 import { timeAgo } from "@/utils/timeAgo";
+import { Colors } from "@/constants/Colors";
 
 interface Props {
   book: {
@@ -18,6 +19,8 @@ interface Props {
     created: string;
     title: string;
     author: string;
+    collectionName: string;
+    id: string;
   };
 }
 
@@ -26,7 +29,10 @@ export default function BookCard({ book }: Props) {
   const { coverImg, created, title, author, collectionName, id } = book;
 
   return (
-    <ThemedView className="flex flex-row h-40 rounded-lg  p-3">
+    <ThemedView
+      className="flex flex-row h-40 rounded-lg my-2 p-2"
+      style={{ width: "100%" }}
+    >
       <TouchableOpacity style={styles.imagePicker}>
         <View style={styles.placeholderContainer}>
           <Image
@@ -64,21 +70,25 @@ export default function BookCard({ book }: Props) {
 
 const styles = StyleSheet.create({
   imagePicker: {
-    width: Dimensions.get("window").width / 3,
-    height: "100%",
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#f0f0f0",
+    // width: Dimensions.get("window").width / 3,
+    // height: "100%",
+    // justifyContent: "center",
+    // alignItems: "center",
+    backgroundColor: Colors.dark.background,
+    // borderWidth: 4,
+    // borderColor: "red",
+    // borderStyle: "solid",
     borderRadius: 8,
   },
   placeholderContainer: {
     justifyContent: "center",
     alignItems: "center",
     padding: 5,
+    // width: 4,
   },
   textContainer: {
-    flex: 1, // Allow the text container to take up remaining space
+    // flex: 1, // Allow the text container to take up remaining space
     marginLeft: 12,
-    justifyContent: "space-between",
+    // justifyContent: "space-between",
   },
 });

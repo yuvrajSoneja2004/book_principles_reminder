@@ -15,7 +15,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { BASE_DB_URL, pb } from "@/db/pb";
 import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import Register from "../(auth)/register";
 import Challanges from "./challanges";
 
@@ -36,6 +36,7 @@ export default function HomeScreen() {
         setCategories(res.items);
       })
       .catch((er) => {
+        router.push("/(auth)/login");
         console.error("Error fetching categories:", er);
       })
       .finally(() => setRefreshing(false));

@@ -9,7 +9,10 @@ import {
 import { pb } from "@/db/pb";
 import SafeAreaScreen from "@/utils/SafeAreaScreen";
 import { ThemedText } from "@/components/ThemedText";
-import { Checkbox } from "expo-checkbox"; // Using expo-checkbox as specified
+import { Checkbox } from "expo-checkbox";
+import { Audio } from "expo-av";
+import { shuffleArray } from "@/utils/shuffleArray";
+import { getRandomInt } from "@/utils/randomInt";
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -19,10 +22,24 @@ export default function CheckIn() {
   const [categoryData, setCategoryData] = useState([]);
   const [checkedItems, setCheckedItems] = useState({});
   const [checkedCount, setCheckedCount] = useState(0);
+  const [checkBorderColor, setCheckBorderColor] = useState("red");
+  const [sound, setSound] = useState();
+
+  async function playSound() {
+    console.log("Loading Sound");
+    const { sound } = await Audio.Sound.createAsync(
+      require("../../assets/sounds/notification/default.wav")
+    );
+
+    setSound(sound);
+
+    console.log("Playing Sound");
+    await sound.playAsync();
+  }
 
   const fetchChallenges = async () => {
     try {
-      const res = await pb.collection("Challanges").getList();
+      const res = await pb.collection("Challanges").getList(0, 3);
       setChallenges(res.items);
 
       const allCategories = res.items.flatMap(
@@ -32,13 +49,21 @@ export default function CheckIn() {
 
       if (uniqueCategories.length > 0) {
         const categoryResults = [];
+
         for (const category of uniqueCategories) {
           const result = await fetchCategoryData(category);
-          if (result) categoryResults.push(...result);
+          if (result) {
+            // Take only up to 3 items from each category
+            console.log(
+              "That's how we do it.",
+              ...result[0].principles?.slice(0, 3)
+            );
+            categoryResults.push(...result[0].principles?.slice(0, 3));
+          }
           await delay(0);
         }
         const principles = categoryResults
-          .flatMap((item) => item.principles)
+          .flatMap((item) => item)
           .filter((item) => item != null);
 
         setCategoryData(principles);
@@ -54,19 +79,24 @@ export default function CheckIn() {
       console.error("Error fetching challenges:", error);
     }
   };
-
+  const handleSaveProgress = () => {
+    alert("Congrats! Successfully completed today's tasks.");
+    playSound();
+  };
   const handleThreeChecked = useCallback(() => {
     console.log("At least three items are checked!");
     // Add your function call here
+    handleSaveProgress();
   }, []);
   const fetchCategoryData = async (category) => {
     try {
-      // console.log(`Fetching data for category: ${category}`);
+      console.log(`Fetching data for category: ${category}`);
       const categoryRecord = await pb
         .collection("Books")
-        .getFullList({ filter: `type = '${category}'` });
+        .getList(0, 2, { filter: `type = '${category}'` });
       // console.log(`Fetched data for ${category}:`, categoryRecord);/
-      return categoryRecord;
+      return categoryRecord.items;
+      // return shuffleArray(categoryRecord);
     } catch (error) {
       console.error(`Error fetching category data for ${category}:`, error);
       return null;
@@ -77,9 +107,14 @@ export default function CheckIn() {
     fetchChallenges();
   }, [refreshTrigger]);
 
-  // useEffect(() => {
-  //   console.log(checkedItems);
-  // });
+  useEffect(() => {
+    return sound
+      ? () => {
+          console.log("Unloading Sound");
+          sound.unloadAsync();
+        }
+      : undefined;
+  }, [sound]);
 
   const toggleCheckbox = (title) => {
     setCheckedItems((prevState) => {
@@ -106,6 +141,7 @@ export default function CheckIn() {
           );
         } else {
           ToastAndroid.show("All checks complete!", ToastAndroid.SHORT);
+          setCheckBorderColor("green");
         }
       }
 
@@ -118,11 +154,11 @@ export default function CheckIn() {
       <TouchableOpacity
         key={item.title}
         onPress={() => toggleCheckbox(item.title)}
-        className="flex justify-start flex-row items-center my-2"
+        className="flex justify-start flex-row items-center my-2 "
         style={{
           borderStyle: "solid",
           borderWidth: 1,
-          borderColor: "gray",
+          borderColor: checkBorderColor,
           padding: 13,
         }}
       >
@@ -176,7 +212,10 @@ export default function CheckIn() {
   return (
     <SafeAreaScreen>
       <TouchableOpacity
-        onPress={() => setRefreshTrigger((prev) => prev + 1)}
+        onPress={() => {
+          setRefreshTrigger((prev) => prev + 1);
+          console.log("Reloading...");
+        }}
         style={styles.button}
       >
         <ThemedText>Reload</ThemedText>

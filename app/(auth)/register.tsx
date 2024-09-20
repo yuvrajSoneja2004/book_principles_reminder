@@ -22,20 +22,25 @@ export default function Register() {
         password,
         passwordConfirm,
       };
+      console.log(data);
 
       // Use the create method on the 'users' collection
-      const createdUser = await pb.collection("users").create(data);
+      const createdUser = await pb.collection("users").create({
+        username: username,
+        email,
+        password: password,
+      });
 
       // Optionally, log in the user immediately after creation
-      const authData = await pb
-        .collection("users")
-        .authWithPassword(email, password);
+      // const authData = await pb
+      //   .collection("users")
+      //   .authWithPassword(email, password);
 
       Alert.alert("Success", "User created and logged in successfully");
       // You might want to navigate to another screen here
     } catch (error) {
-      console.error("Error signing up:", error.response.data);
-      Alert.alert("Error", error.response.title.message || "Failed to sign up");
+      console.error("Error signing up:", error);
+      // Alert.alert("Error", error.response.title.message || "Failed to sign up");
     }
   };
 
