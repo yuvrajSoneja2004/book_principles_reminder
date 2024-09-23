@@ -16,8 +16,7 @@ import { BASE_DB_URL, pb } from "@/db/pb";
 import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
 import { Link, router } from "expo-router";
-import Register from "../(auth)/register";
-import Challanges from "./challanges";
+import CategoryCardLoader from "@/loaders/CategoryCardLoader";
 
 const { width } = Dimensions.get("window");
 const itemWidth = width / 2 - 15; // Subtracting for margins
@@ -25,10 +24,11 @@ const itemWidth = width / 2 - 15; // Subtracting for margins
 export default function HomeScreen() {
   const [categories, setCategories] = useState([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [refreshing, setRefreshing] = React.useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
   // TODO: Turn the below code to recusable 'useFetch' custom hook.
   const fetchInfo = () => {
+    setIsLoading(true);
     pb.collection("Categories")
       .getList()
       .then((res) => {
@@ -39,7 +39,10 @@ export default function HomeScreen() {
         router.push("/(auth)/login");
         console.error("Error fetching categories:", er);
       })
-      .finally(() => setRefreshing(false));
+      .finally(() => {
+        setIsLoading(false);
+        setRefreshing(false);
+      });
   };
 
   const onRefresh = React.useCallback(() => {
@@ -52,19 +55,23 @@ export default function HomeScreen() {
     fetchInfo();
   }, []);
 
-  const renderItem = ({ item }) => (
-    <Link href={`/bookSelection/${item.type}/${item.title}`} className="m-2">
-      <ThemedView style={styles.itemContainer}>
-        <Image
-          source={{
-            uri: `${BASE_DB_URL}/api/files/${item.collectionName}/${item.id}/${item.iconURI}`,
-          }}
-          style={styles.icon}
-        />
-        <ThemedText style={styles.title}>{item.title}</ThemedText>
-      </ThemedView>
-    </Link>
-  );
+  const renderItem = ({ item }) => {
+    return isLoading ? (
+      <CategoryCardLoader />
+    ) : (
+      <Link href={`/bookSelection/${item.type}/${item.title}`} className="m-2">
+        <ThemedView style={styles.itemContainer}>
+          <Image
+            source={{
+              uri: `${BASE_DB_URL}/api/files/${item.collectionName}/${item.id}/${item.iconURI}`,
+            }}
+            style={styles.icon}
+          />
+          <ThemedText style={styles.title}>{item.title}</ThemedText>
+        </ThemedView>
+      </Link>
+    );
+  };
 
   return (
     <SafeAreaView style={styles.container}>

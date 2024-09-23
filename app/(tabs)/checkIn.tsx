@@ -5,6 +5,7 @@ import {
   FlatList,
   StyleSheet,
   ToastAndroid,
+  Text,
 } from "react-native";
 import { pb } from "@/db/pb";
 import SafeAreaScreen from "@/utils/SafeAreaScreen";
@@ -13,6 +14,10 @@ import { Checkbox } from "expo-checkbox";
 import { Audio } from "expo-av";
 import { shuffleArray } from "@/utils/shuffleArray";
 import { getRandomInt } from "@/utils/randomInt";
+import Modal from "@/components/Modal";
+import GlobalButton from "@/components/GlobalButton";
+import { Image } from "expo-image";
+import { AntDesign } from "@expo/vector-icons";
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -22,8 +27,11 @@ export default function CheckIn() {
   const [categoryData, setCategoryData] = useState([]);
   const [checkedItems, setCheckedItems] = useState({});
   const [checkedCount, setCheckedCount] = useState(0);
+  const [showModal, setShowModal] = useState<boolean>(false);
   const [checkBorderColor, setCheckBorderColor] = useState("red");
   const [sound, setSound] = useState();
+
+  const STAR_ICON_SIZE = 100;
 
   async function playSound() {
     console.log("Loading Sound");
@@ -80,7 +88,9 @@ export default function CheckIn() {
     }
   };
   const handleSaveProgress = () => {
-    alert("Congrats! Successfully completed today's tasks.");
+    // alert("Congrats! Successfully completed today's tasks.");
+    setShowModal(true);
+
     playSound();
   };
   const handleThreeChecked = useCallback(() => {
@@ -226,6 +236,24 @@ export default function CheckIn() {
         keyExtractor={(item) => item.title}
         style={styles.list}
       />
+      <Modal isOpen={showModal}>
+        <View className=" w-full h-full flex justify-center items-center">
+          <TouchableOpacity
+            className="flex justify-end items-end w-full"
+            onPress={() => setShowModal(false)}
+          >
+            <AntDesign name="close" color={"#fff"} size={20} />
+          </TouchableOpacity>
+          <Image
+            source={require("../../assets/images/tasks-completed.png")}
+            style={{ width: STAR_ICON_SIZE, height: STAR_ICON_SIZE }}
+          />
+          <Text className="text-2xl text-white font-primary-regular text-center py-2">
+            Today's Challanges Completed!
+          </Text>
+          <GlobalButton title="Check Stats" styles="mt-3 px-12 rounded-md" />
+        </View>
+      </Modal>
     </SafeAreaScreen>
   );
 }
